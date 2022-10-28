@@ -85,10 +85,9 @@ udp_rx_callback(struct simple_udp_connection *c,
 /*---------------------------------------------------------------------------*/
 PROCESS(node_process, "RPL Node");
 PROCESS(my_app,"UDP APP");
-PROCESS(check,"Check Schedule");
 
 
-AUTOSTART_PROCESSES(&node_process,&my_app,&check);
+AUTOSTART_PROCESSES(&node_process,&my_app);
 
 
 
@@ -131,10 +130,10 @@ PROCESS_THREAD(node_process, ev, data)
       int fila = tsch_queue_global_packet_count();
       if (diotime != 0) {
         int tsch_links = sf_rippletickle_tx_amount_by_peer(no);
-        int max_links = MPLUS_MAX_LINKS;
+        int max_links = RTRICKLE_MAX_LINKS;
         int demanded_cell = (diotime<=16) + ((hop < 4 ) && (diotime <= 18)) + (fila >= 8); //+ (fila >= 32);
-        printf("Trickle: (%i) RANK: %i Demand: %i-> Hop = %i -> DIOTIme = %i -> Fila = %i\n" ,node_id, rank, demanded_cell, hop, diotime, fila);
-        printf("Trickle: Tenho: %i, Demanda: %i (Pedindo: %i)\n",tsch_links,demanded_cell,demanded_cell-tsch_links);
+        //printf("Trickle: (%i) RANK: %i Demand: %i-> Hop = %i -> DIOTIme = %i -> Fila = %i\n" ,node_id, rank, demanded_cell, hop, diotime, fila);
+        //printf("Trickle: Tenho: %i, Demanda: %i (Pedindo: %i)\n",tsch_links,demanded_cell,demanded_cell-tsch_links);
         if (demanded_cell > max_links){
           demanded_cell = max_links;
         }
@@ -188,29 +187,6 @@ PROCESS_THREAD(my_app, ev, data)
 
       etimer_set(&periodic_timer, APP_SEND_INTERVAL_SEC * CLOCK_SECOND);
     }
-  }
-  PROCESS_END();
-}
-
-
-/*---------------------------------------------------------------------------*/
-PROCESS_THREAD(check, ev, data)
-{
-  static int is_coordinator;
-  static struct etimer et;
-  PROCESS_BEGIN();
-  #if CONTIKI_TARGET_COOJA
-    is_coordinator = (node_id == 1);
-  #endif
-
-  etimer_set(&et, CLOCK_SECOND * 5);
-
-  while(1) {
-    PROCESS_YIELD_UNTIL(etimer_expired(&et));
-    if (tsch_queue_get_time_source() != NULL || is_coordinator){
-      sf_rippletickle_check();
-    }
-    etimer_set(&et, CLOCK_SECOND * 15);
   }
   PROCESS_END();
 }
