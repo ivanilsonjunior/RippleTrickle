@@ -808,7 +808,7 @@ sf_rippletickle_check()
   assert( l != NULL && sf != NULL);
   while(l != NULL) {
     int quantidade = sf_rippletickle_rx_amount_by_peer(&l->addr);
-    if (quantidade > MPLUS_MAX_LINKS) {
+    if (quantidade > RTRICKLE_MAX_LINKS) {
       LOG_DBG("RippleTrickle - ");
       sixp_trans_t *trans = sixp_trans_find(&l->addr);
       if (trans != NULL) {

@@ -53,7 +53,7 @@ int sf_rippletickle_check();
 int sf_rippletickle_clean(linkaddr_t *peer_addr);
 
 #define SF_SIMPLE_MAX_LINKS  3
-#define MPLUS_MAX_LINKS 3
+#define RTRICKLE_MAX_LINKS 3
 #define SF_SIMPLE_SFID       0xf0
 extern const sixtop_sf_t sf_simple_driver;
 
