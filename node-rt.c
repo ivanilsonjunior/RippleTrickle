@@ -130,7 +130,7 @@ PROCESS_THREAD(node_process, ev, data)
       int hop = (rank == 0) ? -1 : rank / minRank;
       int fila = tsch_queue_global_packet_count();
       if (diotime != 0) {
-        int tsch_links = sf_minimalplus_tx_amount_by_peer(no);
+        int tsch_links = sf_rippletickle_tx_amount_by_peer(no);
         int max_links = MPLUS_MAX_LINKS;
         int demanded_cell = (diotime<=16) + ((hop < 4 ) && (diotime <= 18)) + (fila >= 8); //+ (fila >= 32);
         printf("Trickle: (%i) RANK: %i Demand: %i-> Hop = %i -> DIOTIme = %i -> Fila = %i\n" ,node_id, rank, demanded_cell, hop, diotime, fila);
@@ -208,7 +208,7 @@ PROCESS_THREAD(check, ev, data)
   while(1) {
     PROCESS_YIELD_UNTIL(etimer_expired(&et));
     if (tsch_queue_get_time_source() != NULL || is_coordinator){
-      sf_minimalplus_check();
+      sf_rippletickle_check();
     }
     etimer_set(&et, CLOCK_SECOND * 15);
   }

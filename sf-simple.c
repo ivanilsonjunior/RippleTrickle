@@ -148,7 +148,7 @@ add_links_to_schedule(const linkaddr_t *peer_addr, uint8_t link_option,
       continue;
     }
 
-    LOG_INFO("MinimalPlus - sf-simple: Schedule link %d as %s with node ",
+    LOG_INFO("RippleTrickle - sf-simple: Schedule link %d as %s with node ",
            cell.timeslot_offset,
            link_option == LINK_OPTION_RX ? "RX" : "TX");
     LOG_INFO_LLADDR(peer_addr);
@@ -186,7 +186,7 @@ remove_links_to_schedule(const uint8_t *cell_list, uint16_t cell_list_len)
     tsch_schedule_remove_link_by_timeslot(slotframe,
                                           cell.timeslot_offset,
                                           cell.channel_offset);
-    LOG_INFO("MinimalPlus - sf-simple: Removing link %d \n", cell.timeslot_offset);
+    LOG_INFO("RippleTrickle - sf-simple: Removing link %d \n", cell.timeslot_offset);
   }
 }
 
@@ -622,7 +622,7 @@ sf_simple_add_links(linkaddr_t *peer_addr, uint8_t num_links)
         index++;
         slot_check++;
       } else if(slot_check > TSCH_SCHEDULE_DEFAULT_LENGTH) {
-        LOG_ERR("MinimalPlus - sf-simple:! Number of trials for free slot exceeded...\n");
+        LOG_ERR("RippleTrickle - sf-simple:! Number of trials for free slot exceeded...\n");
         return -1;
         break; /* exit while loop */
       }
@@ -726,7 +726,7 @@ sf_simple_remove_links(linkaddr_t *peer_addr)
 
 
 int 
-sf_minimalplus_tx_amount()
+sf_rippletickle_tx_amount()
 {
   struct tsch_slotframe *sf = tsch_schedule_slotframe_head();
   struct tsch_link *l = list_head(sf->links_list);
@@ -743,7 +743,7 @@ sf_minimalplus_tx_amount()
 } 
 
 int 
-sf_minimalplus_tx_amount_by_peer(linkaddr_t *peer_addr)
+sf_rippletickle_tx_amount_by_peer(linkaddr_t *peer_addr)
 {
   struct tsch_slotframe *sf = tsch_schedule_slotframe_head();
   struct tsch_link *l = list_head(sf->links_list);
@@ -763,7 +763,7 @@ sf_minimalplus_tx_amount_by_peer(linkaddr_t *peer_addr)
 
 //Returns the number of RX cell with 
 int 
-sf_minimalplus_rx_amount_by_peer(linkaddr_t *peer_addr)
+sf_rippletickle_rx_amount_by_peer(linkaddr_t *peer_addr)
 {
   struct tsch_slotframe *sf = tsch_schedule_slotframe_head();
   struct tsch_link *l = list_head(sf->links_list);
@@ -782,7 +782,7 @@ sf_minimalplus_rx_amount_by_peer(linkaddr_t *peer_addr)
 } 
 
 int 
-sf_minimalplus_rx_amount()
+sf_rippletickle_rx_amount()
 {
   struct tsch_slotframe *sf = tsch_schedule_slotframe_head();
   struct tsch_link *l = list_head(sf->links_list);
@@ -801,15 +801,15 @@ sf_minimalplus_rx_amount()
 
 /*Check for inconsistences*/
 int 
-sf_minimalplus_check()
+sf_rippletickle_check()
 {
   struct tsch_slotframe *sf = tsch_schedule_get_slotframe_by_handle(slotframe_handle);
   struct tsch_link *l = list_head(sf->links_list);
   assert( l != NULL && sf != NULL);
   while(l != NULL) {
-    int quantidade = sf_minimalplus_rx_amount_by_peer(&l->addr);
+    int quantidade = sf_rippletickle_rx_amount_by_peer(&l->addr);
     if (quantidade > MPLUS_MAX_LINKS) {
-      LOG_DBG("MinimalPlus - ");
+      LOG_DBG("RippleTrickle - ");
       sixp_trans_t *trans = sixp_trans_find(&l->addr);
       if (trans != NULL) {
         LOG_DBG_("Transacion detected aborting.\n");
@@ -818,7 +818,7 @@ sf_minimalplus_check()
       LOG_DBG_("Cleaning schedule with: ");
       LOG_DBG_LLADDR(&l->addr);
       LOG_DBG_("\n");
-      sf_minimalplus_clean(&l->addr);
+      sf_rippletickle_clean(&l->addr);
       break;
     }
     l = list_item_next(l);
@@ -828,7 +828,7 @@ sf_minimalplus_check()
 
 /*Flush all RX cells and sent a 6p CLEAN to peer*/
 int
-sf_minimalplus_clean(linkaddr_t *peer_addr)
+sf_rippletickle_clean(linkaddr_t *peer_addr)
 {
 
   uint8_t i = 0;

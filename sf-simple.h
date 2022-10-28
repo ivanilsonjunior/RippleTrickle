@@ -47,10 +47,10 @@ int sf_simple_add_links(linkaddr_t *peer_addr, uint8_t num_links);
 int sf_simple_remove_links(linkaddr_t *peer_addr);
 
 //My definitions
-int sf_minimalplus_tx_amount_by_peer(linkaddr_t *peer_addr);
-int sf_minimalplus_rx_amount_by_peer(linkaddr_t *peer_addr);
-int sf_minimalplus_check();
-int sf_minimalplus_clean(linkaddr_t *peer_addr);
+int sf_rippletickle_tx_amount_by_peer(linkaddr_t *peer_addr);
+int sf_rippletickle_rx_amount_by_peer(linkaddr_t *peer_addr);
+int sf_rippletickle_check();
+int sf_rippletickle_clean(linkaddr_t *peer_addr);
 
 #define SF_SIMPLE_MAX_LINKS  3
 #define MPLUS_MAX_LINKS 3
