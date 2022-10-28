@@ -47,6 +47,14 @@
 #include "net/mac/tsch/sixtop/sixp-pkt.h"
 #include "net/mac/tsch/sixtop/sixp-trans.h"
 
+#if ROUTING_CONF_RPL_LITE
+#include "net/routing/rpl-lite/rpl.h"
+#elif ROUTING_CONF_RPL_CLASSIC
+#include "net/routing/rpl-classic/rpl.h"
+#include "net/routing/rpl-classic/rpl-private.h"
+#endif
+
+
 #include "sf-simple.h"
 
 #define DEBUG DEBUG_PRINT
@@ -867,6 +875,22 @@ sf_rippletickle_clean(linkaddr_t *peer_addr)
                                 sixp_pkg_data, sizeof(sixp_pkt_metadata_t),
                                 peer_addr, NULL, NULL, 0) == 0);
   return 0;
+}
+
+void rt_tsch_rpl_callback_parent_switch (rpl_parent_t *old, rpl_parent_t *new) {
+  /* Map the TSCH time source on the RPL preferred parent */
+  if(tsch_is_associated == 1) {
+    tsch_queue_update_time_source((const linkaddr_t *)uip_ds6_nbr_lladdr_from_ipaddr(rpl_parent_get_ipaddr(new)));
+    if (old != NULL){
+      const linkaddr_t *oldaddr;
+      oldaddr =  (const linkaddr_t *) uip_ds6_nbr_lladdr_from_ipaddr(rpl_parent_get_ipaddr(old));
+      sf_rippletickle_clean((linkaddr_t *)oldaddr);
+      LOG_INFO("RippleTrickle - Parent Switch, cleaning scheduling with old parent: ");
+      LOG_INFO_LLADDR(oldaddr);
+      LOG_INFO_("\n");
+    }
+  
+  }
 }
 
 const sixtop_sf_t sf_simple_driver = {

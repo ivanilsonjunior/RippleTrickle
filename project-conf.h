@@ -93,6 +93,8 @@
 
 #define TSCH_CONF_DEFAULT_HOPPING_SEQUENCE TSCH_HOPPING_SEQUENCE_4_16
 
+#define RPL_CALLBACK_PARENT_SWITCH rt_tsch_rpl_callback_parent_switch
+
 #if WITH_SECURITY
 
 /* Enable security */

@@ -42,6 +42,12 @@
 #define _SIXTOP_SF_SIMPLE_H_
 
 #include "net/linkaddr.h"
+#if ROUTING_CONF_RPL_LITE
+#include "net/routing/rpl-lite/rpl.h"
+#elif ROUTING_CONF_RPL_CLASSIC
+#include "net/routing/rpl-classic/rpl.h"
+#include "net/routing/rpl-classic/rpl-private.h"
+#endif
 
 int sf_simple_add_links(linkaddr_t *peer_addr, uint8_t num_links);
 int sf_simple_remove_links(linkaddr_t *peer_addr);
@@ -51,6 +57,7 @@ int sf_rippletickle_tx_amount_by_peer(linkaddr_t *peer_addr);
 int sf_rippletickle_rx_amount_by_peer(linkaddr_t *peer_addr);
 int sf_rippletickle_check();
 int sf_rippletickle_clean(linkaddr_t *peer_addr);
+void rt_tsch_rpl_callback_parent_switch (rpl_parent_t *old, rpl_parent_t *new);
 
 #define SF_SIMPLE_MAX_LINKS  3
 #define RTRICKLE_MAX_LINKS 3
