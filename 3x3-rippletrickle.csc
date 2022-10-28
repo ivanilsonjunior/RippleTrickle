@@ -18,8 +18,8 @@
       org.contikios.cooja.contikimote.ContikiMoteType
       <identifier>mtype921795717</identifier>
       <description>node</description>
-      <source>[CONFIG_DIR]/node-minimalp.c</source>
-      <commands>make -j$(CPUS) node-minimalp.cooja TARGET=cooja</commands>
+      <source>[CONFIG_DIR]/node-rt.c</source>
+      <commands>make -j$(CPUS) node-rt.cooja TARGET=cooja</commands>
       <moteinterface>org.contikios.cooja.interfaces.Position</moteinterface>
       <moteinterface>org.contikios.cooja.interfaces.Battery</moteinterface>
       <moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiVib</moteinterface>
