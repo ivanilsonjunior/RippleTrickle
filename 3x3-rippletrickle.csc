@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <simconf>
   <simulation>
-    <title>TSCH Minimal Plus</title>
+    <title>Ripple Trickle 3x3</title>
     <randomseed>123456</randomseed>
     <motedelay_us>1000000</motedelay_us>
     <radiomedium>
@@ -301,14 +301,6 @@ while (true) {
     <height>527</height>
     <location_x>938</location_x>
     <location_y>171</location_y>
-  </plugin>
-  <plugin>
-    PowerTracker
-    <width>692</width>
-    <z>3</z>
-    <height>516</height>
-    <location_x>727</location_x>
-    <location_y>206</location_y>
   </plugin>
 </simconf>
 

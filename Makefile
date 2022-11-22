@@ -9,6 +9,7 @@ CONTIKI=../../
 MAKE_WITH_SECURITY ?= 0 # force Security from command line
 
 MAKE_MAC = MAKE_MAC_TSCH
+MAKE_ROUTING = MAKE_ROUTING_RPL_LITE
 
 include $(CONTIKI)/Makefile.dir-variables
 MODULES += $(CONTIKI_NG_MAC_DIR)/tsch/sixtop

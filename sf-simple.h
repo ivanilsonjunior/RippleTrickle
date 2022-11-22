@@ -61,6 +61,11 @@ void rt_tsch_rpl_callback_parent_switch (rpl_parent_t *old, rpl_parent_t *new);
 
 #define SF_SIMPLE_MAX_LINKS  3
 #define RTRICKLE_MAX_LINKS 3
+#define MinTrickleThreshold 16
+#define MidTrickleThreshold 18
+#define MaxTrickleThreshold 20
+#define MinRankThreshold 4
+#define QueueThreshold 8
 #define SF_SIMPLE_SFID       0xf0
 extern const sixtop_sf_t sf_simple_driver;
 

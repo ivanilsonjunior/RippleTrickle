@@ -17,6 +17,7 @@ org/**
 *.csv
 *.deps
 build/*
+temp/*
 
 ### C ###
 # Prerequisites

@@ -123,20 +123,24 @@ PROCESS_THREAD(node_process, ev, data)
     no = tsch_queue_get_nbr_address(n);
   
     if(!is_coordinator && n != NULL) {
+      // Get current DIOTimer
       int diotime = curr_instance.dag.dio_intcurrent;
+      // Get current rank
       int rank = curr_instance.dag.rank;
+      // hop is the node's depths level 
       int minRank = curr_instance.min_hoprankinc;
       int hop = (rank == 0) ? -1 : rank / minRank;
+      // Current queue occupancy
       int fila = tsch_queue_global_packet_count();
       if (diotime != 0) {
+        // Get the current 
         int tsch_links = sf_rippletickle_tx_amount_by_peer(no);
-        int max_links = RTRICKLE_MAX_LINKS;
-        int demanded_cell = (diotime<=16) + ((hop < 4 ) && (diotime <= 18)) + (fila >= 8); //+ (fila >= 32);
-        //printf("Trickle: (%i) RANK: %i Demand: %i-> Hop = %i -> DIOTIme = %i -> Fila = %i\n" ,node_id, rank, demanded_cell, hop, diotime, fila);
-        //printf("Trickle: Tenho: %i, Demanda: %i (Pedindo: %i)\n",tsch_links,demanded_cell,demanded_cell-tsch_links);
-        if (demanded_cell > max_links){
-          demanded_cell = max_links;
+        int demanded_cell = (diotime <= MinTrickleThreshold) + ((hop < MinRankThreshold ) && (diotime <= MidTrickleThreshold)) + (fila >= QueueThreshold && (diotime <= MaxTrickleThreshold) );
+        // Check if reaches the limit of allocated cells
+        if (demanded_cell > RTRICKLE_MAX_LINKS){
+          demanded_cell = RTRICKLE_MAX_LINKS;
         }
+        //Update Schedule
         if (tsch_links > demanded_cell){
           sf_simple_remove_links(no);
         } else if (tsch_links < demanded_cell) {
