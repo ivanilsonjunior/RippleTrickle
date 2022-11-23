@@ -1,0 +1,10 @@
+sqlalchemy
+flask
+flask_httpauth
+datetime
+werkzeug
+matplotlib
+numpy
+networkx
+lxml
+pandas
