@@ -54,7 +54,7 @@ class Runner:
         except:
             pass
 
-        filename = os.path.join(self.SELF_PATH, cooja_file)
+        filename = os.path.join(self.SELF_PATH, cooja_file)-logname=COOJA.log
         args = " ".join([self.COOJA_PATH + "/gradlew --no-watch-fs --parallel --build-cache -p", self.COOJA_PATH, "run --args='-nogui=" + filename, "-contiki=" + self.CONTIKI_PATH, "-logdir=" + self.SELF_PATH, "-logname=COOJA.log" + "'"])
         sys.stdout.write("  Running Cooja, args={}\n".format(args))
 
@@ -86,9 +86,9 @@ class Runner:
     # Run the application
 
     def run(self):
-        if not os.access(self.cooja_jar, os.R_OK):
-            print('The file "{}" does not exist, did you build Cooja?'.format(self.cooja_jar))
-            return (-1)
+        #if not os.access(self.cooja_jar, os.R_OK):
+        #    print('The file "{}" does not exist, did you build Cooja?'.format(self.cooja_jar))
+        #    return (-1)
 
         input_file = self.cooja_input
 
