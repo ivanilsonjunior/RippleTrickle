@@ -738,12 +738,11 @@ sf_rippletickle_tx_amount()
 {
   struct tsch_slotframe *sf = tsch_schedule_slotframe_head();
   struct tsch_link *l = list_head(sf->links_list);
-
   assert( l != NULL && sf != NULL);
   int tsch_links = 0;
   while(l != NULL) {
     if (l->link_options == LINK_OPTION_TX) {
-     tsch_links++;
+      tsch_links++;
     } 
     l = list_item_next(l);
   }
