@@ -55,6 +55,8 @@ int sf_simple_remove_links(linkaddr_t *peer_addr);
 //My definitions
 int sf_rippletickle_tx_amount_by_peer(linkaddr_t *peer_addr);
 int sf_rippletickle_rx_amount_by_peer(linkaddr_t *peer_addr);
+int sf_rippletickle_rx_amount();
+int sf_rippletickle_tx_amount();
 int sf_rippletickle_check();
 int sf_rippletickle_clean(linkaddr_t *peer_addr);
 void rt_tsch_rpl_callback_parent_switch (rpl_parent_t *old, rpl_parent_t *new);
