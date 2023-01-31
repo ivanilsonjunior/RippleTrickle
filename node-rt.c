@@ -134,18 +134,21 @@ PROCESS_THREAD(node_process, ev, data)
       int fila = tsch_queue_global_packet_count();
       if (diotime != 0) {
         // Get the current 
-        int tsch_links = sf_rippletickle_tx_amount_by_peer(no);
+        int tsch_links = sf_rippletrickle_tx_amount_by_peer(no);
+        int rx_links = sf_rippletrickle_rx_amount();
         int demanded_cell = (diotime <= MinTrickleThreshold) + ((hop < MinRankThreshold ) && (diotime <= MidTrickleThreshold)) + (fila >= QueueThreshold && (diotime <= MaxTrickleThreshold) );
+        demanded_cell += rx_links/RTRICKLE_DemandRate;
         // Check if reaches the limit of allocated cells
         if (demanded_cell > RTRICKLE_MAX_LINKS){
           demanded_cell = RTRICKLE_MAX_LINKS;
         }
         //Update Schedule
         if (tsch_links > demanded_cell){
-          sf_simple_remove_links(no);
+          sf_rippletrickle_remove_links(no, tsch_links-demanded_cell);
         } else if (tsch_links < demanded_cell) {
           sf_simple_add_links(no, demanded_cell-tsch_links);
         }
+                curr_instance.demand = demanded_cell;
       }
     }
   }

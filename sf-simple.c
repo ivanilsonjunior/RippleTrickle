@@ -672,6 +672,7 @@ sf_simple_add_links(linkaddr_t *peer_addr, uint8_t num_links)
 
   return 0;
 }
+
 /*---------------------------------------------------------------------------*/
 /* Initiates a Sixtop Link deletion
  */
@@ -733,8 +734,72 @@ sf_simple_remove_links(linkaddr_t *peer_addr)
 }
 
 
+/*---------------------------------------------------------------------------*/
+/* Initiates a Sixtop Link deletion
+ */
+int
+sf_rippletrickle_remove_links(linkaddr_t *peer_addr, uint8_t num_links)
+{
+  LOG_INFO("RippleTrickle - DELETE %u cells", num_links);
+  uint8_t i = 0, index = 0;
+  struct tsch_slotframe *sf =
+    tsch_schedule_get_slotframe_by_handle(slotframe_handle);
+  struct tsch_link *l;
+  uint16_t req_len;
+  sf_simple_cell_t cell;
+  sf_simple_cell_t cell_list[SF_SIMPLE_MAX_LINKS];
+
+  assert(peer_addr != NULL && sf != NULL);
+
+  for(i = 0; i < TSCH_SCHEDULE_DEFAULT_LENGTH; i++) {
+    l = tsch_schedule_get_link_by_timeslot(sf, i, 0);
+
+    if(l) {
+      /* Non-zero value indicates a scheduled link */
+      if((linkaddr_cmp(&l->addr, peer_addr)) && (l->link_options == LINK_OPTION_TX)) {
+        /* This link is scheduled as a TX link to the specified neighbor */
+        cell.timeslot_offset = i;
+        cell.channel_offset = l->channel_offset;
+        cell_list[index] = cell;
+        index++;
+        if (index == num_links)  break;
+      }
+    }
+  }
+
+  if(index == 0) {
+    return -1;
+  }
+
+  memset(req_storage, 0, sizeof(req_storage));
+  if(sixp_pkt_set_num_cells(SIXP_PKT_TYPE_REQUEST,
+                            (sixp_pkt_code_t)(uint8_t)SIXP_PKT_CMD_DELETE,
+                            num_links,
+                            req_storage,
+                            sizeof(req_storage)) != 0 ||
+     sixp_pkt_set_cell_list(SIXP_PKT_TYPE_REQUEST,
+                            (sixp_pkt_code_t)(uint8_t)SIXP_PKT_CMD_DELETE,
+                            (const uint8_t *)cell_list,
+                            index * sizeof(sf_simple_cell_t),
+                            0,
+                            req_storage, sizeof(req_storage)) != 0) {
+
+    return -1;
+  }
+  /* The length of fixed part is 4 bytes: Metadata, CellOptions, and NumCells */
+  req_len = 4 + sizeof(sf_simple_cell_t);
+
+  sixp_output(SIXP_PKT_TYPE_REQUEST, (sixp_pkt_code_t)(uint8_t)SIXP_PKT_CMD_DELETE,
+              SF_SIMPLE_SFID,
+              req_storage, req_len, peer_addr,
+              NULL, NULL, 0);
+
+  return 0;
+}
+
+
 int 
-sf_rippletickle_tx_amount()
+sf_rippletrickle_tx_amount()
 {
   struct tsch_slotframe *sf = tsch_schedule_slotframe_head();
   struct tsch_link *l = list_head(sf->links_list);
@@ -750,7 +815,7 @@ sf_rippletickle_tx_amount()
 } 
 
 int 
-sf_rippletickle_tx_amount_by_peer(linkaddr_t *peer_addr)
+sf_rippletrickle_tx_amount_by_peer(linkaddr_t *peer_addr)
 {
   struct tsch_slotframe *sf = tsch_schedule_slotframe_head();
   struct tsch_link *l = list_head(sf->links_list);
@@ -770,7 +835,7 @@ sf_rippletickle_tx_amount_by_peer(linkaddr_t *peer_addr)
 
 //Returns the number of RX cell with 
 int 
-sf_rippletickle_rx_amount_by_peer(linkaddr_t *peer_addr)
+sf_rippletrickle_rx_amount_by_peer(linkaddr_t *peer_addr)
 {
   struct tsch_slotframe *sf = tsch_schedule_slotframe_head();
   struct tsch_link *l = list_head(sf->links_list);
@@ -789,7 +854,7 @@ sf_rippletickle_rx_amount_by_peer(linkaddr_t *peer_addr)
 } 
 
 int 
-sf_rippletickle_rx_amount()
+sf_rippletrickle_rx_amount()
 {
   struct tsch_slotframe *sf = tsch_schedule_slotframe_head();
   struct tsch_link *l = list_head(sf->links_list);
@@ -808,13 +873,13 @@ sf_rippletickle_rx_amount()
 
 /*Check for inconsistences*/
 int 
-sf_rippletickle_check()
+sf_rippletrickle_check()
 {
   struct tsch_slotframe *sf = tsch_schedule_get_slotframe_by_handle(slotframe_handle);
   struct tsch_link *l = list_head(sf->links_list);
   assert( l != NULL && sf != NULL);
   while(l != NULL) {
-    int quantidade = sf_rippletickle_rx_amount_by_peer(&l->addr);
+    int quantidade = sf_rippletrickle_rx_amount_by_peer(&l->addr);
     if (quantidade > RTRICKLE_MAX_LINKS) {
       LOG_DBG("RippleTrickle - ");
       sixp_trans_t *trans = sixp_trans_find(&l->addr);
@@ -825,7 +890,7 @@ sf_rippletickle_check()
       LOG_DBG_("Cleaning schedule with: ");
       LOG_DBG_LLADDR(&l->addr);
       LOG_DBG_("\n");
-      sf_rippletickle_clean(&l->addr);
+      sf_rippletrickle_clean(&l->addr);
       break;
     }
     l = list_item_next(l);
@@ -835,7 +900,7 @@ sf_rippletickle_check()
 
 /*Flush all RX cells and sent a 6p CLEAN to peer*/
 int
-sf_rippletickle_clean(linkaddr_t *peer_addr)
+sf_rippletrickle_clean(linkaddr_t *peer_addr)
 {
 
   uint8_t i = 0;
@@ -883,7 +948,7 @@ void rt_tsch_rpl_callback_parent_switch (rpl_parent_t *old, rpl_parent_t *new) {
     if (old != NULL){
       const linkaddr_t *oldaddr;
       oldaddr =  (const linkaddr_t *) uip_ds6_nbr_lladdr_from_ipaddr(rpl_parent_get_ipaddr(old));
-      sf_rippletickle_clean((linkaddr_t *)oldaddr);
+      sf_rippletrickle_clean((linkaddr_t *)oldaddr);
       LOG_INFO("RippleTrickle - Parent Switch, cleaning scheduling with old parent: ");
       LOG_INFO_LLADDR(oldaddr);
       LOG_INFO_("\n");

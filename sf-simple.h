@@ -52,22 +52,25 @@
 int sf_simple_add_links(linkaddr_t *peer_addr, uint8_t num_links);
 int sf_simple_remove_links(linkaddr_t *peer_addr);
 
-//My definitions
-int sf_rippletickle_tx_amount_by_peer(linkaddr_t *peer_addr);
-int sf_rippletickle_rx_amount_by_peer(linkaddr_t *peer_addr);
-int sf_rippletickle_rx_amount();
-int sf_rippletickle_tx_amount();
-int sf_rippletickle_check();
-int sf_rippletickle_clean(linkaddr_t *peer_addr);
+//RippleTrickle definitions
+int sf_rippletrickle_remove_links(linkaddr_t *peer_addr, uint8_t num_links);
+int sf_rippletrickle_tx_amount_by_peer(linkaddr_t *peer_addr);
+int sf_rippletrickle_rx_amount_by_peer(linkaddr_t *peer_addr);
+int sf_rippletrickle_rx_amount();
+int sf_rippletrickle_tx_amount();
+int sf_rippletrickle_check();
+int sf_rippletrickle_clean(linkaddr_t *peer_addr);
 void rt_tsch_rpl_callback_parent_switch (rpl_parent_t *old, rpl_parent_t *new);
 
+// SF Constants
 #define SF_SIMPLE_MAX_LINKS  3
-#define RTRICKLE_MAX_LINKS 3
+#define RTRICKLE_MAX_LINKS 5
+#define RTRICKLE_DemandRate 2 //
 #define MinTrickleThreshold 16
 #define MidTrickleThreshold 18
 #define MaxTrickleThreshold 20
 #define MinRankThreshold 4
-#define QueueThreshold 8
+#define QueueThreshold 4
 #define SF_SIMPLE_SFID       0xf0
 extern const sixtop_sf_t sf_simple_driver;
 
