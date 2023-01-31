@@ -55,7 +55,7 @@ class Runner:
             pass
 
         filename = os.path.join(self.SELF_PATH, cooja_file)
-        args = " ".join([self.COOJA_PATH + "/gradlew --no-watch-fs --parallel --build-cache -p", self.COOJA_PATH, "run --args='-nogui=" + filename, "-contiki=" + self.CONTIKI_PATH, "-logdir=" + self.SELF_PATH, "-logname=COOJA.log" + "'"])
+        args = " ".join([self.COOJA_PATH + "/gradlew --no-watch-fs --parallel --build-cache -p", self.COOJA_PATH, "run --args='-nogui=" + filename, "-contiki=" + self.CONTIKI_PATH, "-logdir=" + self.SELF_PATH, "--logname=COOJA.log" + "'"])
         sys.stdout.write("  Running Cooja, args={}\n".format(args))
 
         (retcode, output) = self.run_subprocess(args, '')
