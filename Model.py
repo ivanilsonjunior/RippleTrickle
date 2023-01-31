@@ -320,6 +320,16 @@ class Run(Base):
         import subprocess
         proc = subprocess.Popen(['make','viewconf'],bufsize=1, universal_newlines=True, stdout=subprocess.PIPE)
         myDict = {}
+        # Get last line source: https://stackoverflow.com/questions/46258499/how-to-read-the-last-line-of-a-file-in-python
+        with open('COOJA.testlog', 'rb') as f:
+            try:  # catch OSError in case of a one line file 
+                f.seek(-2, os.SEEK_END)
+                while f.read(1) != b'\n':
+                    f.seek(-2, os.SEEK_CUR)
+            except OSError:
+                f.seek(0)
+            last_line = f.readline().decode()
+            myDict['SimTimeout'] = int(last_line.split(':')[1])/1000000
         for param in ['radiomedium','transmitting_range','interference_range','success_ratio_tx','success_ratio_rx']:
             myDict[param] = str(minidom.parse(self.experiment.experimentFile).getElementsByTagName(param)[0].firstChild.data).strip()
         for line in iter(proc.stdout.readline,''):
@@ -972,7 +982,7 @@ class MAC(Base):
                     time = j[0]/1000
                     plt.plot(time, index, marker="^", color="green")
                     x[0] = time
-                    x[1] = (3600) #sim end without node's disconnection
+                    x[1] = self.metric.run.getParameters()['SimTimeout'] #sim end without node's disconnection
                 else:
                     time = j[0]/1000
                     plt.plot(time, index, marker="v", color="red")
