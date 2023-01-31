@@ -740,7 +740,7 @@ sf_simple_remove_links(linkaddr_t *peer_addr)
 int
 sf_rippletrickle_remove_links(linkaddr_t *peer_addr, uint8_t num_links)
 {
-  LOG_INFO("RippleTrickle - DELETE %u cells", num_links);
+  LOG_INFO("RippleTrickle - DELETE %u cells\n", num_links);
   uint8_t i = 0, index = 0;
   struct tsch_slotframe *sf =
     tsch_schedule_get_slotframe_by_handle(slotframe_handle);
