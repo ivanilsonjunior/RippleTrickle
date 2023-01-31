@@ -95,6 +95,7 @@ AUTOSTART_PROCESSES(&node_process,&my_app);
 /*---------------------------------------------------------------------------*/
 PROCESS_THREAD(node_process, ev, data)
 {
+#if RPL_WITH_RIPPLETRICKLE
   static int is_coordinator;
   static struct etimer et;
   static struct tsch_neighbor *n;
@@ -135,9 +136,10 @@ PROCESS_THREAD(node_process, ev, data)
       if (diotime != 0) {
         // Get the current 
         int tsch_links = sf_rippletrickle_tx_amount_by_peer(no);
-        int rx_links = sf_rippletrickle_rx_amount();
         int demanded_cell = (diotime <= MinTrickleThreshold) + ((hop < MinRankThreshold ) && (diotime <= MidTrickleThreshold)) + (fila >= QueueThreshold && (diotime <= MaxTrickleThreshold) );
-        demanded_cell += rx_links/RTRICKLE_DemandRate;
+
+          int rx_links = sf_rippletrickle_rx_amount();
+          demanded_cell += rx_links/RTRICKLE_DemandRate;
         // Check if reaches the limit of allocated cells
         if (demanded_cell > RTRICKLE_MAX_LINKS){
           demanded_cell = RTRICKLE_MAX_LINKS;
@@ -152,7 +154,7 @@ PROCESS_THREAD(node_process, ev, data)
       }
     }
   }
-
+#endif /* RPL_WITH_RIPPLETRICKLE */
   PROCESS_END();
 }
 
