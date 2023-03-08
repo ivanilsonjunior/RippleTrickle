@@ -43,7 +43,7 @@
 
 
 /* Application settings */
-#define APP_SEND_INTERVAL_SEC 1
+#define APP_SEND_INTERVAL_SEC 5
 #define APP_WARM_UP_PERIOD_SEC 300
 
 /* Enable printing of packet counters */
@@ -86,7 +86,7 @@
 #define TSCH_CONF_AUTOSTART 0
 
 /* 6TiSCH schedule length */
-#define TSCH_SCHEDULE_CONF_DEFAULT_LENGTH 31
+#define TSCH_SCHEDULE_CONF_DEFAULT_LENGTH 19
 #define TSCH_CONF_MAC_MAX_FRAME_RETRIES 3
 #define TSCH_QUEUE_CONF_NUM_PER_NEIGHBOR 32
 #define ENERGEST_CONF_ON 1
