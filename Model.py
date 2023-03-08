@@ -627,7 +627,7 @@ class RPL(Base):
         parents = {}
         time = slice
         anterior = 0
-        endtime = 600000001
+        endtime = self.metric.run.getParameters()['SimTimeout'] + 1
         retorno = []
         while time < endtime:
             records = [rec for rec in self.metric.run.records if rec.recordType == "RPL" and "links" in rec.rawData and rec.simTime > anterior and rec.simTime < time]
