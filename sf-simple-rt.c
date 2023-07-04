@@ -35,6 +35,9 @@
  *         Shalu R <shalur@cdac.in>
  *         Lijo Thomas <lijo@cdac.in>
  *         Yasuyuki Tanaka <yasuyuki.tanaka@inf.ethz.ch>
+ * 
+ * sf-simple was used as base for developing RT
+ *         Ivanilson Junior <ivanilson.junior@ifrn.edu.br>
  */
 
 #include "contiki-lib.h"
@@ -55,7 +58,7 @@
 #endif
 
 
-#include "sf-simple.h"
+#include "sf-simple-rt.h"
 
 #define DEBUG DEBUG_PRINT
 #include "net/net-debug.h"
@@ -957,7 +960,7 @@ void rt_tsch_rpl_callback_parent_switch (rpl_parent_t *old, rpl_parent_t *new) {
   }
 }
 
-const sixtop_sf_t sf_simple_driver = {
+const sixtop_sf_t sf_rt_driver = {
   SF_SIMPLE_SFID,
   CLOCK_SECOND,
   NULL,

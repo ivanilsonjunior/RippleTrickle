@@ -53,7 +53,7 @@
 
 
 
-#include "sf-simple.h"
+#include "sf-simple-rt.h"
 
 #define DEBUG DEBUG_PRINT
 #include "net/ipv6/uip-debug.h"
@@ -113,7 +113,7 @@ PROCESS_THREAD(node_process, ev, data)
   }
 
   NETSTACK_MAC.on();
-  sixtop_add_sf(&sf_simple_driver);
+  sixtop_add_sf(&sf_rt_driver);
 
   etimer_set(&et, CLOCK_SECOND * 5);
   while(1) {

@@ -35,11 +35,14 @@
  * \author
  *         Shalu R <shalur@cdac.in>
  *         Lijo Thomas <lijo@cdac.in>
- *         Yasuyuki Tanaka <yasuyuki.tanaka@inf.ethz.ch>
+ *         Yasuyuki Tanaka <yasuyuki.tanaka@inf.ethz.ch>sf-simple was used as base for developing RT
+ * 
+ * sf-simple was used as base for developing RTsed as base for developing RT
+ *         Ivanilson Junior <ivanilson.junior@ifrn.edu.br>
  */
 
-#ifndef _SIXTOP_SF_SIMPLE_H_
-#define _SIXTOP_SF_SIMPLE_H_
+#ifndef _SIXTOP_SF_SIMPLE_RT_H_
+#define _SIXTOP_SF_SIMPLE_RT_H_
 
 #include "net/linkaddr.h"
 #if ROUTING_CONF_RPL_LITE
@@ -72,6 +75,6 @@ void rt_tsch_rpl_callback_parent_switch (rpl_parent_t *old, rpl_parent_t *new);
 #define MinRankThreshold 4
 #define QueueThreshold 4
 #define SF_SIMPLE_SFID       0xf0
-extern const sixtop_sf_t sf_simple_driver;
+extern const sixtop_sf_t sf_rt_driver;
 
-#endif /* !_SIXTOP_SF_SIMPLE_H_ */
+#endif /* !_SIXTOP_SF_SIMPLE_RT_H_ */

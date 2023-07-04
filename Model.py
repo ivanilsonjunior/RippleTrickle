@@ -121,8 +121,8 @@ class Experiment(Base):
             shutil.copy("Makefile","temp")
             # TODO: I Should get the mote.c file via .csc file
             shutil.copy("node-rt.c","temp")
-            shutil.copy("sf-simple.h","temp")
-            shutil.copy("sf-simple.c","temp")
+            shutil.copy("sf-simple-rt.h","temp")
+            shutil.copy("sf-simple-rt.c","temp")
             self.confFile.save("temp/project-conf.h")
             #Adjsting the Makefile for the Contiki's right place
             with open('temp/Makefile','r') as file:
